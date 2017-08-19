@@ -1,0 +1,15 @@
+web:
+  build: .
+  ports:
+    - 80:31337
+  volumes:
+    - /etc/nginx/sites-available/
+    - /etc/nginx/sites-enabled/
+  hostname: ssgproxy
+  links:
+    - postgres
+
+postgres:
+  image: postgres
+  environment:
+    - POSTGRESQL_PASSWORD=p4ssw0rd
