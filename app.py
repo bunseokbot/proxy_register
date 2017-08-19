@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request, render_template
+from route import Route
 
 import os
 
@@ -13,9 +14,20 @@ else:
     app.secret_key = os.urandom(30)
 
 
+@app.route("/domain", methods=["GET", "POST"])
+def domain():
+    if request.method == "GET":
+        # search domain
+        pass
+
+    elif request.method == "POST":
+        # register domain
+        pass
+
+
 @app.route("/")
 def index():
-    return "Index Page"
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
