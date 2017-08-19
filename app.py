@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, render_template
 
 import os
 
@@ -26,7 +26,7 @@ def domain():
 
 @app.route("/")
 def index():
-    return "Index Page"
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
