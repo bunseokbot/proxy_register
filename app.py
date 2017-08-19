@@ -1,5 +1,9 @@
 from flask import Flask, request, render_template
 
+from route import Route
+
+from route.db import init_db, db_session
+
 import os
 
 
@@ -10,18 +14,41 @@ app.debug = True
 if app.debug:
     app.secret_key = "T3st_s3cret_k3y!~$@"
 else:
+    init_db()
     app.secret_key = os.urandom(30)
+
+
+@app.teardown_request
+def remove_session(exception=None):
+    db_session.remove()
 
 
 @app.route("/domain", methods=["GET", "POST"])
 def domain():
+    ip = request.args.get("ip")
+    domain = request.args.get("domain")
+
+    if (ip and domain) is None:
+        return "parameter error", 400
+
+    r = Route(ip, domain)
+    
     if request.method == "GET":
         # search domain
-        pass
+        r.search()
 
     elif request.method == "POST":
         # register domain
-        pass
+        user = register.args.get("user")
+
+        if user is not None:
+            r.register(user)
+        else:
+            return "user not found", 400
+
+    del r
+
+    return "{} - {}".format(ip, domain)
 
 
 @app.route("/")
