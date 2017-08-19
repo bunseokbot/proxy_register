@@ -13,6 +13,17 @@ else:
     app.secret_key = os.urandom(30)
 
 
+@app.route("/domain", methods=["GET", "POST"])
+def domain():
+    if request.method == "GET":
+        # search domain
+        pass
+
+    elif request.method == "POST":
+        # register domain
+        pass
+
+
 @app.route("/")
 def index():
     return "Index Page"
