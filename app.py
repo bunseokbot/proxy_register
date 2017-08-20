@@ -24,9 +24,9 @@ def remove_session(exception=None):
 
 @app.route("/domain", methods=["GET", "POST"])
 def domain():
-    ip = request.args.get("ip")
-    domain = request.args.get("domain")
-
+    ip = request.form.get("ip")
+    domain = request.form.get("domain")
+    
     if (ip and domain) is None:
         return "parameter error", 400
 
@@ -38,7 +38,7 @@ def domain():
 
     elif request.method == "POST":
         # register domain
-        owner = register.args.get("owner")
+        owner = request.form.get("owner")
 
         if owner is not None:
             r.register(owner)
