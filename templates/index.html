@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register NGINX Reverse Proxy</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/font-awesome.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="page-header">
+          <h2>SSG 리버스 프록시 세팅 페이지</h2>
+        </div>
+        <div class="col-md-3">
+          <div class="login-box well">
+        <form accept-charset="UTF-8" role="form">
+            <legend>서버 정보</legend>
+            <div class="form-group">
+                <label for="owner">소유자</label>
+                <input name="owner" value='' id="owner" placeholder="소유자" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="domain">연결 도메인</label>
+                <input name="domain" value='' id="domain" placeholder="연결 도메인" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="ip">VM 아이피 주소</label>
+                <input name="ip" value='' id="ip" placeholder="VM 아이피 주소" type="text" class="form-control" />
+            </div>
+            <hr />
+            <div class="form-group">
+                <button class="btn btn-default btn-block m-t-md">등록하기</a>
+            </div>
+        </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+  <script type="text/javascript">
+    $('button').on('click', function() {
+        var owner = $('#owner').val();
+        var domain = $('#domain').val();
+        var ip = $('#ip').val();
+
+        var chkmsg = "아래 정보가 맞는지 확인해 주세요.\n\n소유자: " + owner + "\n연결 도메인: " + domain + "\nVM 아이피: " + ip;
+
+        if(confirm(chkmsg)) {
+            $.post("/domain", {"owner": owner, "domain": domain, "ip": ip}, function(data) {
+                if(data === "success") {
+                    alert("등록에 성공하였습니다.")
+                } else {
+                    alert("등록에 실패하였습니다. 관리자에게 문의하세요.");
+                }
+            });
+        } 
+
+        event.preventDefault();
+    });
+  </script>
+</html>
