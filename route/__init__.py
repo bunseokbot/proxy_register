@@ -45,7 +45,6 @@ class Route(object):
 
         out, err = s.communicate()
 
-        print(out, err)
 
     def generate_cert(self):
         s = subprocess.Popen(
@@ -53,8 +52,6 @@ class Route(object):
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         out, err = s.communicate()
-
-        print(out, err)
 
     def write_file(self):
         data = "server {\n"\
