@@ -3,7 +3,7 @@
 
 
 ## 운영 환경
-Python 3.4 + Flask + PostgreSQL
+Python 3.4 + Flask + SQLite
 
 ## 실행 방법
 
