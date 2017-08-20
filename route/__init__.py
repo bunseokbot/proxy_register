@@ -50,25 +50,25 @@ class Route(object):
     def write_file(self):
         data = "server {\n"\
             "\tlisten 443 ssl;\n"\
-            "\tserver_name {}\n\n"\
-            "\tssl_certificate /etc/letsencrypt/live/{}/fullchain.pem;\n"\
-            "\tssl_certificate_key /etc/letsencrypt/live/{}/privkey.pem;\n\n"\
+            "\tserver_name " + self.domain + "\n\n"\
+            "\tssl_certificate /etc/letsencrypt/live/" + self.domain + "/fullchain.pem;\n"\
+            "\tssl_certificate_key /etc/letsencrypt/live/" + self.domain + "/privkey.pem;\n\n"\
             "\tlocation / {\n"\
             "\t\tproxy_redirect off;\n"\
             "\t\tproxy_pass_header Server;\n"\
             "\t\tproxy_set_header Host $http_host;\n"\
             "\t\tproxy_set_header X-Real-IP $remote_addr;\n"\
             "\t\tproxy_set_header X-Scheme $scheme;\n"\
-            "\t\tproxy_pass http://{};\n"\
+            "\t\tproxy_pass http://" + self.ip + ";\n"\
             "\t}\n"\
             "}\n\n"\
             "server {\n"\
             "\tlisten 80;\n"\
-            "\tserver_name {}\n\n"\
+            "\tserver_name " + self.domain + "\n\n"\
             "\tlocation / {\n"\
             "\t\trewrite ^(.*) https://$host$1 permanent;\n"\
             "\t}\n"\
-            "}\n".format(self.domain, self.domain, self.domain, self.ip, self.domain)
+            "}\n"
 
         with open("/etc/nginx/sites-available/{}".format(self.domain), "a") as f:
             f.write(data)
