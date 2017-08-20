@@ -3,7 +3,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
-engine = create_engine("postgresql://postgres:p4ssw0rd@localhost:5432/route")
+engine = create_engine("postgresql://postgres:p4ssw0rd@localhost:5432/docker")
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 Base = declarative_base()
