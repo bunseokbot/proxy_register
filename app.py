@@ -41,7 +41,11 @@ def domain():
         owner = request.form.get("owner")
 
         if owner is not None:
-            r.register(owner)
+            status = r.register(owner)
+
+            if not status:
+                return "failure", 200
+
         else:
             return "owner not found", 400
 

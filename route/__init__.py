@@ -32,11 +32,18 @@ class Route(object):
         """ register domain nginx reverse proxy """
         self.action_nginx("stop")
         self.generate_cert()
-        self.write_file()
+        
+        if os.path.exists("/etc/letsencrypt/live/{}/fullchain.pem".format(self.domain)):
+            self.write_file()
+            db_session.add(Domain(self.ip, self.domain, user))
+            db_session.commit()
+            flag = True
+        else:
+            flag = False
+
         self.action_nginx("start")
 
-        db_session.add(Domain(self.ip, self.domain, user))
-        db_session.commit()
+        return flag
 
     def action_nginx(self, action):
         s = subprocess.Popen(
