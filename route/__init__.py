@@ -37,28 +37,37 @@ class Route(object):
         db_session.commit()
 
     def restart_nginx(self):
+        subprocess.Popen(
+            ["service", "nginx", "restart"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    def generate_cert(self):
+        subprocess.Popen(
+            ["letsencrypt", "certonly", "-a", "standalone", "-d", self.domain],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     def write_file(self):
         data = "server {\n"\
             "\tlisten 443 ssl;\n"\
-            "\tserver_name {}\n\n".format(self.domain)\
+            "\tserver_name {}\n\n"\
+            "\tssl_certificate /etc/letsencrypt/live/{}/fullchain.pem;\n"\
+            "\tssl_certificate_key /etc/letsencrypt/live/{}/privkey.pem;\n\n"\
             "\tlocation / {\n"\
             "\t\tproxy_redirect off;\n"\
             "\t\tproxy_pass_header Server;\n"\
             "\t\tproxy_set_header Host $http_host;\n"\
             "\t\tproxy_set_header X-Real-IP $remote_addr;\n"\
             "\t\tproxy_set_header X-Scheme $scheme;\n"\
-            "\t\tproxy_pass http://{};\n".format(self.ip)\
+            "\t\tproxy_pass http://{};\n"\
             "\t}\n"\
             "}\n\n"\
             "server {\n"\
             "\tlisten 80;\n"\
-            "\tserver_name {}\n\n".format(self.domain)\
+            "\tserver_name {}\n\n"\
             "\tlocation / {\n"\
             "\t\trewrite ^(.*) https://$host$1 permanent;\n"\
             "\t}\n"\
-            "}\n"
+            "}\n".format(self.domain, self.domain, self.domain, self.ip, self.domain)
 
         with open("/etc/nginx/sites-available/{}".format(self.domain), "a") as f:
             f.write(data)
