@@ -38,12 +38,12 @@ def domain():
 
     elif request.method == "POST":
         # register domain
-        user = register.args.get("user")
+        owner = register.args.get("owner")
 
-        if user is not None:
-            r.register(user)
+        if owner is not None:
+            r.register(owner)
         else:
-            return "user not found", 400
+            return "owner not found", 400
 
     del r
 
