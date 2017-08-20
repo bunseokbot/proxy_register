@@ -55,7 +55,7 @@
         var chkmsg = "아래 정보가 맞는지 확인해 주세요.\n\n소유자: " + owner + "\n연결 도메인: " + domain + "\nVM 아이피: " + ip;
 
         if(confirm(chkmsg)) {
-            $.post("/domain", {"owner": owner, "domain": domain, "ip": ip}, function(data) {
+            $.post("/domain", {owner: owner, domain: domain, ip: ip}, function(data) {
                 if(data === "success") {
                     alert("등록에 성공하였습니다.")
                 } else {
