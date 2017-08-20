@@ -30,27 +30,36 @@ class Route(object):
 
     def register(self, user):
         """ register domain nginx reverse proxy """
+        self.action_nginx("stop")
         self.generate_cert()
         self.write_file()
-        self.restart_nginx()
+        self.action_nginx("start")
 
-        db_session.add(Domain(ip, domain, user))
+        db_session.add(Domain(self.ip, self.domain, user))
         db_session.commit()
 
-    def restart_nginx(self):
-        subprocess.Popen(
-            ["service", "nginx", "restart"],
+    def action_nginx(self, action):
+        s = subprocess.Popen(
+            ["service", "nginx", action],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+        out, err = s.communicate()
+
+        print(out, err)
+
     def generate_cert(self):
-        subprocess.Popen(
+        s = subprocess.Popen(
             ["letsencrypt", "certonly", "-a", "standalone", "-d", self.domain],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        out, err = s.communicate()
+
+        print(out, err)
 
     def write_file(self):
         data = "server {\n"\
             "\tlisten 443 ssl;\n"\
-            "\tserver_name " + self.domain + "\n\n"\
+            "\tserver_name " + self.domain + ";\n\n"\
             "\tssl_certificate /etc/letsencrypt/live/" + self.domain + "/fullchain.pem;\n"\
             "\tssl_certificate_key /etc/letsencrypt/live/" + self.domain + "/privkey.pem;\n\n"\
             "\tlocation / {\n"\
@@ -64,7 +73,7 @@ class Route(object):
             "}\n\n"\
             "server {\n"\
             "\tlisten 80;\n"\
-            "\tserver_name " + self.domain + "\n\n"\
+            "\tserver_name " + self.domain + ";\n\n"\
             "\tlocation / {\n"\
             "\t\trewrite ^(.*) https://$host$1 permanent;\n"\
             "\t}\n"\
