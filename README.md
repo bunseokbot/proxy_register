@@ -8,5 +8,5 @@ Python 3.4 + Flask + SQLite
 ## 실행 방법
 
 ```
-docker-compose up
+python app.py
 ```
