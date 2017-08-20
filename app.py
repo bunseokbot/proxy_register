@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template
 
 from route import Route
-
 from route.db import init_db, db_session
 
 import os
@@ -35,7 +34,7 @@ def domain():
     
     if request.method == "GET":
         # search domain
-        r.search()
+        rows = r.search()
 
     elif request.method == "POST":
         # register domain
@@ -48,7 +47,7 @@ def domain():
 
     del r
 
-    return "{} - {}".format(ip, domain)
+    return "success", 200
 
 
 @app.route("/")
