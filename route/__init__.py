@@ -30,6 +30,7 @@ class Route(object):
 
     def register(self, user):
         """ register domain nginx reverse proxy """
+        self.generate_cert()
         self.write_file()
         self.restart_nginx()
 
